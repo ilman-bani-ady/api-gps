@@ -1,0 +1,302 @@
+###user####
+
+API yang telah dibuat memiliki endpoint:
+GET /api/users - Mendapatkan semua users
+GET /api/users/:id - Mendapatkan user berdasarkan ID
+POST /api/users - Membuat user baru
+PUT /api/users/:id - Mengupdate user
+DELETE /api/users/:id - Menghapus user
+
+
+Contoh penggunaan POST untuk membuat user baru:
+{
+  "username": "newuser",
+  "password": "password123",
+  "full_name": "New User",
+  "role": "staff"
+}
+
+1. GET - Mendapatkan Semua Users
+GET http://localhost:3000/api/users
+Response:
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 22,
+      "username": "admin",
+      "full_name": "Administrator",
+      "role": "admin",
+      "created_at": "2024-12-22T18:47:35.333Z",
+      "last_login": null
+    }
+    // ... data user lainnya
+  ],
+  "total": 1
+}
+2. GET - Mendapatkan User by ID
+GET http://localhost:3000/api/users/22
+Response:
+{
+  "status": "success",
+  "data": {
+    "id": 22,
+    "username": "admin",
+    "full_name": "Administrator",
+    "role": "admin",
+    "created_at": "2024-12-22T18:47:35.333Z",
+    "last_login": null
+  }
+}
+3. POST - Membuat User Baru
+POST http://localhost:3000/api/users
+Request Body:
+{
+  "username": "newuser",
+  "password": "password123",
+  "full_name": "New User",
+  "role": "staff"
+}   
+Response:
+{
+    "status": "success",
+    "data": {
+      "id": 23,
+      "username": "newuser",
+      "full_name": "New User",
+      "role": "staff",
+      "created_at": "2024-03-19T10:00:00.000Z"
+    }
+  }
+}
+4. PUT - Mengupdate User
+PUT http://localhost:3000/api/users/23
+Content-Type: application/json
+{
+"full_name": "Updated Name",
+"role": "admin",
+"password": "newpassword123" // opsional
+}
+Response:
+{
+  "status": "success",
+  "data": {
+    "id": 23,
+    "username": "newuser",
+"full_name": "Updated Name",
+    "role": "admin",
+    "created_at": "2024-03-19T10:00:00.000Z"
+  }
+}
+5. DELETE - Menghapus User
+DELETE http://localhost:3000/api/users/23
+Response:
+{
+  "status": "success",
+  "message": "User berhasil dihapus"
+}
+
+
+###tracking####
+
+http://localhost:3000/api/tracking
+
+1. Get All Vehicle Locations
+GET /locations
+response 200
+{
+    "status": "success",
+    "data": [
+      {
+        "id": 316,
+        "device_id": "DEV001",
+        "latitude": -6.306393,
+        "longitude": 106.888775,
+        "speed": null,
+        "course": null,
+        "date": null,
+        "timestamp": "2024-12-12T18:29:36",
+        "valid": true
+      },
+      // ... data kendaraan lainnya
+    ],
+    "total": 1
+  }
+
+2. Get Single Vehicle Location
+GET /locations/:device_id
+Parameters:
+device_id (path) - ID perangkat kendaraan
+Response Success (200):
+{
+    "status": "success",
+    "data": {
+      "id": 316,
+      "device_id": "DEV001",
+      "latitude": -6.306393,
+      "longitude": 106.888775,
+      "speed": null,
+      "course": null,
+      "date": null,
+      "timestamp": "2024-12-12T18:29:36",
+      "valid": true
+    }
+  }
+  Response Not Found (404):
+  {
+    "status": "error",
+    "message": "Device location not found"
+  }
+ 
+3. Get Multiple Vehicle Locations
+Request:
+POST /locations/bulk
+Content-Type: application/json
+
+{
+  "device_ids": ["DEV001", "DEV002", "DEV003"]
+}
+
+Request Body:
+device_ids (array) - Array dari device ID yang ingin didapatkan lokasinya
+Response Success (200):
+{
+    "status": "success",
+    "data": [
+      {
+        "id": 316,
+        "device_id": "DEV001",
+        "latitude": -6.306393,
+        "longitude": 106.888775,
+        "speed": null,
+        "course": null,
+        "date": null,
+        "timestamp": "2024-12-12T18:29:36",
+        "valid": true
+      },
+      // ... data kendaraan lainnya
+    ],
+    "total": 3
+  }
+
+Response Error (400):
+  {
+    "status": "error",
+    "message": "device_ids must be an array"
+  }
+Error Responses
+Server Error (500)
+{
+"status": "error",
+"message": "Internal server error"
+}
+
+###CURL###
+1. Get All Locations:
+curl http://localhost:3000/api/tracking/locations
+2. Get Single Location:
+curl http://localhost:3000/api/tracking/locations/DEV001
+3. Get Multiple Locations:
+curl -X POST -H "Content-Type: application/json" -d '{"device_ids": ["DEV001", "DEV002", "DEV003"]}' http://localhost:3000/api/tracking/locations/bulk
+
+Menggunakan JavaScript Fetch
+1. Get All Locations:
+fetch('/api/tracking/locations')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+2. Get Single Vehicle Location:
+fetch('http://localhost:3000/api/tracking/locations/DEV001')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+3. Get Multiple Vehicle Locations:
+fetch('http://localhost:3000/api/tracking/locations/bulk', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      device_ids: ['DEV001', 'DEV002', 'DEV003']
+    }),
+  })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+
+###Catatan Penting###
+1. Semua response hanya menampilkan data dengan valid = true
+Data diurutkan berdasarkan timestamp terbaru
+Untuk endpoint bulk, maksimum device yang bisa di-request dalam sekali request sebaiknya dibatasi (misalnya maksimal 50 device)
+Response time mungkin bervariasi tergantung jumlah data
+Timestamp menggunakan format ISO 8601
+
+####history####
+Dokumentasi Endpoint History
+1. Get Vehicle History
+Mendapatkan riwayat perjalanan kendaraan dalam rentang waktu tertentu.
+Request:
+GET /history/:device_id?start_date=2024-12-12T18:29:40&end_date=2024-12-12T18:29:49
+ 
+Parameters:
+device_id (path) - ID perangkat kendaraan
+start_date (query) - Waktu awal (format: ISO 8601)
+end_date (query) - Waktu akhir (format: ISO 8601)
+Response Success (200):
+{
+    "status": "success",
+    "data": {
+      "device_id": "DEV001",
+      "start_date": "2024-03-19T00:00:00",
+      "end_date": "2024-03-19T23:59:59",
+      "total_points": 120,
+      "track_points": [
+        {
+          "id": 316,
+          "device_id": "DEV001",
+          "latitude": -6.306393,
+          "longitude": 106.888775,
+          "speed": null,
+          "course": null,
+          "date": null,
+          "timestamp": "2024-03-19T18:29:36",
+          "valid": true
+        },
+        // ... data titik-titik tracking lainnya
+      ]
+    }
+  }
+
+
+2. Get Vehicle History Summary
+Mendapatkan ringkasan perjalanan kendaraan dalam rentang waktu tertentu.
+Request:
+GET /history-summary/:device_id?start_date=2024-03-19T00:00:00&end_date=2024-03-19T23:59:59
+Parameters:
+Sama seperti endpoint history di atas
+Response Success (200):
+
+{
+    "status": "success",
+    "data": {
+      "device_id": "DEV001",
+      "total_points": 120,
+      "start_time": "2024-03-19T00:05:22",
+      "end_time": "2024-03-19T23:55:41",
+      "avg_speed": 45.5,
+      "max_speed": 80
+    }
+  }
+
+Contoh Penggunaan
+// Get history dengan fetch
+fetch('http://localhost:3000/api/tracking/history/DEV001?start_date=2024-03-19T00:00:00&end_date=2024-03-19T23:59:59')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+
+// Get summary dengan fetch
+fetch('http://localhost:3000/api/tracking/history-summary/DEV001?start_date=2024-03-19T00:00:00&end_date=2024-03-19T23:59:59')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
