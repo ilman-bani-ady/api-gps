@@ -238,4 +238,45 @@ router.get('/history-summary/:device_id', async (req, res) => {
   }
 });
 
+// Get list of unique vehicles/fleet
+router.get('/fleet', async (req, res) => {
+  try {
+    const query = `
+      WITH latest_positions AS (
+        SELECT DISTINCT ON (device_id)
+          device_id,
+          timestamp,
+          latitude,
+          longitude,
+          speed
+        FROM temp_data
+        WHERE valid = true
+        ORDER BY device_id, timestamp DESC
+      )
+      SELECT 
+        device_id,
+        timestamp as last_update,
+        latitude as last_latitude,
+        longitude as last_longitude,
+        speed as last_speed
+      FROM latest_positions
+      ORDER BY device_id
+    `;
+    
+    const result = await pool.query(query);
+    
+    res.json({
+      status: 'success',
+      data: result.rows,
+      total: result.rowCount
+    });
+  } catch (error) {
+    console.error('Error fetching fleet list:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error'
+    });
+  }
+});
+
 module.exports = router;

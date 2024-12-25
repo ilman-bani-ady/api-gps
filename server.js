@@ -5,7 +5,7 @@ const userRoutes = require('./routes/user');
 const trackingRoutes = require('./routes/tracking');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3013;
 
 app.use(cors());
 app.use(express.json());
@@ -58,10 +58,11 @@ app.get('/api/routes/:rute_trip_id', async (req, res) => {
   }
 });
 
-// Tambahkan route untuk user
+// Register routes
 app.use('/api/users', userRoutes);
 app.use('/api/tracking', trackingRoutes);
 
+// Start server
 app.listen(port, () => {
-  console.log(`Server berjalan di port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
