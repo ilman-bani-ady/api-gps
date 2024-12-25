@@ -17,7 +17,7 @@ Contoh penggunaan POST untuk membuat user baru:
 }
 
 1. GET - Mendapatkan Semua Users
-GET http://localhost:3000/api/users
+GET http://localhost:3013/api/users
 Response:
 {
   "status": "success",
@@ -35,7 +35,7 @@ Response:
   "total": 1
 }
 2. GET - Mendapatkan User by ID
-GET http://localhost:3000/api/users/22
+GET http://localhost:3013/api/users/22
 Response:
 {
   "status": "success",
@@ -49,7 +49,7 @@ Response:
   }
 }
 3. POST - Membuat User Baru
-POST http://localhost:3000/api/users
+POST http://localhost:3013/api/users
 Request Body:
 {
   "username": "newuser",
@@ -70,7 +70,7 @@ Response:
   }
 }
 4. PUT - Mengupdate User
-PUT http://localhost:3000/api/users/23
+PUT http://localhost:3013/api/users/23
 Content-Type: application/json
 {
 "full_name": "Updated Name",
@@ -89,7 +89,7 @@ Response:
   }
 }
 5. DELETE - Menghapus User
-DELETE http://localhost:3000/api/users/23
+DELETE http://localhost:3013/api/users/23
 Response:
 {
   "status": "success",
@@ -99,7 +99,7 @@ Response:
 
 ###tracking####
 
-http://localhost:3000/api/tracking
+http://localhost:3013/api/tracking
 
 1. Get All Vehicle Locations
 GET /locations
@@ -193,11 +193,11 @@ Server Error (500)
 
 ###CURL###
 1. Get All Locations:
-curl http://localhost:3000/api/tracking/locations
+curl http://localhost:3013/api/tracking/locations
 2. Get Single Location:
-curl http://localhost:3000/api/tracking/locations/DEV001
+curl http://localhost:3013/api/tracking/locations/DEV001
 3. Get Multiple Locations:
-curl -X POST -H "Content-Type: application/json" -d '{"device_ids": ["DEV001", "DEV002", "DEV003"]}' http://localhost:3000/api/tracking/locations/bulk
+curl -X POST -H "Content-Type: application/json" -d '{"device_ids": ["DEV001", "DEV002", "DEV003"]}' http://localhost:3013/api/tracking/locations/bulk
 
 Menggunakan JavaScript Fetch
 1. Get All Locations:
@@ -206,12 +206,12 @@ fetch('/api/tracking/locations')
   .then(data => console.log(data))
   .catch(error => console.error('Error:', error));
 2. Get Single Vehicle Location:
-fetch('http://localhost:3000/api/tracking/locations/DEV001')
+fetch('http://localhost:3013/api/tracking/locations/DEV001')
   .then(response => response.json())
   .then(data => console.log(data))
   .catch(error => console.error('Error:', error));
 3. Get Multiple Vehicle Locations:
-fetch('http://localhost:3000/api/tracking/locations/bulk', {
+fetch('http://localhost:3013/api/tracking/locations/bulk', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -290,13 +290,93 @@ Response Success (200):
 
 Contoh Penggunaan
 // Get history dengan fetch
-fetch('http://localhost:3000/api/tracking/history/DEV001?start_date=2024-03-19T00:00:00&end_date=2024-03-19T23:59:59')
+fetch('http://localhost:3013/api/tracking/history/DEV001?start_date=2024-03-19T00:00:00&end_date=2024-03-19T23:59:59')
   .then(response => response.json())
   .then(data => console.log(data))
   .catch(error => console.error('Error:', error));
 
 // Get summary dengan fetch
-fetch('http://localhost:3000/api/tracking/history-summary/DEV001?start_date=2024-03-19T00:00:00&end_date=2024-03-19T23:59:59')
+fetch('http://localhost:3013/api/tracking/history-summary/DEV001?start_date=2024-03-19T00:00:00&end_date=2024-03-19T23:59:59')
   .then(response => response.json())
   .then(data => console.log(data))
   .catch(error => console.error('Error:', error));
+
+
+
+
+#######################
+# Route Endpoints Documentation
+
+## 1. Get All Routes
+Mengambil semua data rute yang tersedia.
+
+**URL**: `/api/routes`  
+**Method**: `GET`  
+**Auth required**: No
+
+### Success Response
+
+**Code**: `200 OK`
+
+**Response Format**:
+json
+{
+"status": "success",
+"data": [
+{
+"id": "number",
+"rute_trip_id": "string",
+"halte_name": "string",
+"latitude": "number",
+"longitude": "number",
+"rute_sort": "number"
+}
+],
+"total": "number"
+}
+
+
+
+## 2. Get Route by ID
+Mengambil data rute berdasarkan rute_trip_id.
+
+**URL**: `/api/routes/:rute_trip_id`  
+**Method**: `GET`  
+**URL Params**: `rute_trip_id=[string]`
+
+### Success Response
+
+**Code**: `200 OK`
+
+**Response Format**: Sama seperti Get All Routes
+
+### Error Response
+
+**Condition**: Jika rute tidak ditemukan
+
+**Code**: `404 Not Found`
+
+**Response**:
+
+json
+{
+"status": "error",
+"message": "Route not found"
+}
+
+
+### Sample Usage
+
+**Using JavaScript Fetch**:
+javascript
+// Get all routes
+fetch('http://localhost:3013/api/routes')
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error('Error:', error));
+// Get specific route
+fetch('http://localhost:3013/api/routes/8D-R01')
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error('Error:', error));
+

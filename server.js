@@ -3,6 +3,7 @@ const cors = require('cors');
 const pool = require('./db.config');
 const userRoutes = require('./routes/user');
 const trackingRoutes = require('./routes/tracking');
+const routeRoutes = require('./routes/route');
 
 const app = express();
 const port = process.env.PORT || 3013;
@@ -61,6 +62,7 @@ app.get('/api/routes/:rute_trip_id', async (req, res) => {
 // Register routes
 app.use('/api/users', userRoutes);
 app.use('/api/tracking', trackingRoutes);
+app.use('/api', routeRoutes);
 
 // Start server
 app.listen(port, () => {
