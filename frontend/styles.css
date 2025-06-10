@@ -1,0 +1,43 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar {
+    margin-bottom: 2rem;
+}
+
+.card-title {
+    color: #495057;
+    font-weight: 600;
+}
+
+.card-text {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #0d6efd;
+}
+
+#loginForm {
+    max-width: 400px;
+    margin: 2rem auto;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+.btn-primary {
+    padding: 0.5rem 2rem;
+}
+
+.nav-link {
+    font-weight: 500;
+}
+
+#logoutBtn {
+    margin-left: 1rem;
+} 

@@ -13,7 +13,7 @@ router.get('/routes', async (req, res) => {
         latitude,
         longitude,
         rute_sort
-      FROM rute_trip
+      FROM rute_trip_copy1
       ORDER BY rute_trip_id, rute_sort ASC
     `;
     
@@ -45,7 +45,7 @@ router.get('/routes/:rute_trip_id', async (req, res) => {
         latitude,
         longitude,
         rute_sort
-      FROM rute_trip 
+      FROM rute_trip_copy1 
       WHERE rute_trip_id = $1
       ORDER BY rute_sort ASC
     `;

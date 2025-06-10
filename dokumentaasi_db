@@ -1,0 +1,42 @@
+DROP TABLE IF EXISTS temp_data;
+
+CREATE TABLE temp_data (
+    id SERIAL PRIMARY KEY,
+    device_id VARCHAR(50) NOT NULL,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    speed DOUBLE PRECISION,
+    course DOUBLE PRECISION,
+    date TIMESTAMP,
+    timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+    valid BOOLEAN DEFAULT true
+);
+
+INSERT INTO temp_data (device_id, latitude, longitude, speed, course, date, timestamp, valid)
+VALUES ('DEV001', -6.2, 106.8, 40, 90, NOW(), NOW(), true);
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    full_name VARCHAR(100) NOT NULL,
+    role VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'user', 'manager')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP WITH TIME ZONE
+);
+CREATE UNIQUE INDEX idx_users_username ON users(username);
+
+
+curl -X POST http://localhost:3013/api/users -H "Content-Type: application/json" -d '{"username": "user2", "password": "user2", "full_name": "User Satu", "role": "admin"}' | 
+
+
+
+CREATE TABLE rute_trip_copy1 (
+    id SERIAL PRIMARY KEY,
+    rute_trip_id VARCHAR(50) NOT NULL,
+    halte_name VARCHAR(100) NOT NULL,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    rute_sort INTEGER
+);
+

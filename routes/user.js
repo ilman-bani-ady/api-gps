@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db.config');
 const bcrypt = require('bcrypt');
+const auth = require('../middleware/auth');
+
+// Apply auth middleware to all routes
+router.use(auth);
 
 // Get all users
 router.get('/', async (req, res) => {
@@ -151,6 +155,13 @@ router.put('/:id', async (req, res) => {
 // Delete user
 router.delete('/:id', async (req, res) => {
   try {
+    // Cek role admin
+    if (!req.user || req.user.role !== 'admin') {
+      return res.status(403).json({
+        status: 'error',
+        message: 'Only admin can delete users'
+      });
+    }
     const { id } = req.params;
     const query = 'DELETE FROM users WHERE id = $1 RETURNING id';
     const result = await pool.query(query, [id]);

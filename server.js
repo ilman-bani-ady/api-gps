@@ -4,6 +4,8 @@ const pool = require('./db.config');
 const userRoutes = require('./routes/user');
 const trackingRoutes = require('./routes/tracking');
 const routeRoutes = require('./routes/route');
+const authRoutes = require('./routes/auth');
+const fleetRoutes = require('./routes/fleet');
 
 const app = express();
 const port = process.env.PORT || 3013;
@@ -14,7 +16,7 @@ app.use(express.json());
 // API endpoint untuk mendapatkan semua rute
 app.get('/api/routes', async (req, res) => {
   try {
-    const query = 'SELECT * FROM rute_trip ORDER BY rute_trip_id, rute_sort';
+    const query = 'SELECT * FROM rute_trip_copy1 ORDER BY rute_trip_id, rute_sort';
     const result = await pool.query(query);
     
     res.json({
@@ -35,7 +37,7 @@ app.get('/api/routes', async (req, res) => {
 app.get('/api/routes/:rute_trip_id', async (req, res) => {
   try {
     const { rute_trip_id } = req.params;
-    const query = 'SELECT * FROM rute_trip WHERE rute_trip_id = $1 ORDER BY rute_sort';
+    const query = 'SELECT * FROM rute_trip_copy1 WHERE rute_trip_id = $1 ORDER BY rute_sort';
     const result = await pool.query(query, [rute_trip_id]);
     
     if (result.rows.length === 0) {
@@ -60,9 +62,11 @@ app.get('/api/routes/:rute_trip_id', async (req, res) => {
 });
 
 // Register routes
-app.use('/api/users', userRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/tracking', trackingRoutes);
 app.use('/api', routeRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/fleet', fleetRoutes);
 
 // Start server
 app.listen(port, () => {
