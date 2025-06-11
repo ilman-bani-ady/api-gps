@@ -1,3 +1,5 @@
+npm install cookie-parser
+
 ###user####
 
 API yang telah dibuat memiliki endpoint:

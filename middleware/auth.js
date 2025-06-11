@@ -2,26 +2,25 @@ const jwt = require('jsonwebtoken');
 
 const auth = (req, res, next) => {
   try {
-    // Get token from header
+    // Get token from header or cookie
+    let token = null;
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    } else if (req.cookies && req.cookies.token) {
+      token = req.cookies.token;
+    }
+    if (!token) {
       return res.status(401).json({
         status: 'error',
         message: 'No token provided'
       });
     }
-
-    const token = authHeader.split(' ')[1];
-
-    // Verify token
+    // Hanya verify jika token ada dan tidak kosong
     const decoded = jwt.verify(token, process.env.SESSION_SECRET || 'your-secret-key');
-    
-    // Add user info to request
     req.user = decoded;
-    
     next();
   } catch (error) {
-    console.error('Auth error:', error);
     res.status(401).json({
       status: 'error',
       message: 'Invalid token'
@@ -29,4 +28,4 @@ const auth = (req, res, next) => {
   }
 };
 
-module.exports = auth; 
+module.exports = auth;

@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const pool = require('./db.config');
 const userRoutes = require('./routes/user');
 const trackingRoutes = require('./routes/tracking');
@@ -10,8 +11,13 @@ const fleetRoutes = require('./routes/fleet');
 const app = express();
 const port = process.env.PORT || 3013;
 
-app.use(cors());
+// CORS config agar cookie bisa dikirim dari frontend
+app.use(cors({
+  origin: 'http://localhost:3000', // GANTI sesuai alamat frontend Anda
+  credentials: true
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 // API endpoint untuk mendapatkan semua rute
 app.get('/api/routes', async (req, res) => {

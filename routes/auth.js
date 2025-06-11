@@ -4,6 +4,13 @@ const pool = require('../db.config');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax',
+  maxAge: 24 * 60 * 60 * 1000 // 1 hari
+};
+
 // Login route
 router.post('/login', async (req, res) => {
   try {
@@ -56,11 +63,13 @@ router.post('/login', async (req, res) => {
       { expiresIn: '24h' }
     );
 
-    // Send response
+    // Set cookie
+    res.cookie('token', token, cookieOptions);
+
+    // Send response (user info only, no token)
     res.json({
       status: 'success',
       data: {
-        token,
         user: {
           id: user.id,
           username: user.username,
@@ -75,6 +84,20 @@ router.post('/login', async (req, res) => {
       status: 'error',
       message: 'Internal server error'
     });
+  }
+});
+
+// Session check endpoint
+router.get('/session', (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ status: 'error', message: 'No session' });
+    }
+    const decoded = jwt.verify(token, process.env.SESSION_SECRET || 'your-secret-key');
+    res.json({ status: 'success', data: { user: decoded } });
+  } catch (error) {
+    res.status(401).json({ status: 'error', message: 'Invalid session' });
   }
 });
 
