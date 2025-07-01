@@ -11,9 +11,21 @@ const fleetRoutes = require('./routes/fleet');
 const app = express();
 const port = process.env.PORT || 3013;
 
+const allowedOrigins = [
+  'http://103.245.39.149:3000',
+  'http://localhost:3000'
+];
+
 // CORS config agar cookie bisa dikirim dari frontend
 app.use(cors({
-  origin: 'http://localhost:3000', // GANTI sesuai alamat frontend Anda
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
