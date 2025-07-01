@@ -13,7 +13,7 @@ const port = process.env.PORT || 3013;
 
 const allowedOrigins = [
   'http://103.245.39.149:3000',
-  'http://localhost:3000'
+//  'http://localhost:3000'
 ];
 
 // CORS config agar cookie bisa dikirim dari frontend
